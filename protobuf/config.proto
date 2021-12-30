@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package health;
+
+option go_package = "github.com/ytake/kfchc/pbdef";
+
+message ConnectorConfig {
+  message Servers {
+    string connect_server = 1;
+    repeated string connectors = 2;
+  }
+  repeated Servers servers = 1;
+}
