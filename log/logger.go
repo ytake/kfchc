@@ -19,12 +19,22 @@ type (
 	Log struct {
 		Provider *zap.Logger
 	}
+	Option interface {
+		AddOption() zap.Option
+	}
 )
 
 // NewLogger construct
-func NewLogger() *Log {
+func NewLogger(opts ...Option) *Log {
 	logger, _ := zap.NewProduction()
-	return &Log{Provider: logger.WithOptions()}
+	var zopts []zap.Option
+	for _, opt := range opts {
+		add := opt.AddOption()
+		if nil != add {
+			zopts = append(zopts, add)
+		}
+	}
+	return &Log{Provider: logger.WithOptions(zopts...)}
 }
 
 func (l *Log) Info(msg string, args ...interface{}) {
